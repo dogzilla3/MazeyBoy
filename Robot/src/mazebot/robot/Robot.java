@@ -18,7 +18,7 @@ import java.io.File;
 
 public class Robot {
 
-	private final float DEFAULT_SPEED = 200f;
+	private final float SPEED = 150f;
 	private EV3LargeRegulatedMotor leftDriveMotor;
 	private EV3LargeRegulatedMotor rightDriveMotor;	
 	private ColorSensor colorSensor;
@@ -90,37 +90,110 @@ public class Robot {
 		
 		switch(currentOrientation) {
 			case NORTH: lineFollowNorth(); break;
-			case SOUTH:
-				break;
-			case EAST:
-				break;
-			case WEST:
-				break;
+			case SOUTH: lineFollowSouth(); break;
+			case EAST:	lineFollowEast(); break;
+			case WEST:	lineFollowWest(); break;
 		}
 			
 		leftDriveMotor.endSynchronization();
 	}
 	
+	private void turnLeft() {
+		leftDriveMotor.setSpeed(SPEED - 40);
+		rightDriveMotor.setSpeed(SPEED);
+	}
+	
+	private void turnHardLeft() {
+		leftDriveMotor.setSpeed(SPEED - 80);
+		rightDriveMotor.setSpeed(SPEED);
+	}
+	private void turnRight() {
+		leftDriveMotor.setSpeed(SPEED);
+		rightDriveMotor.setSpeed(SPEED - 40);
+	}
+	
+	private void turnHardRight() {
+		leftDriveMotor.setSpeed(SPEED);
+		rightDriveMotor.setSpeed(SPEED - 80);
+	}
+	
+	// White == 6
+	// Black == 7
+	// Green == 2
+	// Red == 0
 	private void lineFollowNorth() {
 		int color = getColorId();
 		if (color == 7) {
-			leftDriveMotor.setSpeed(200f);
-			rightDriveMotor.setSpeed(175f);
+			turnLeft();
 		} else if (color == 2) {
-			leftDriveMotor.setSpeed(175f);
-			rightDriveMotor.setSpeed(200f);
+			turnRight();
 		} else if (color == 6) {
 			if (lastColor == 7) {
-				leftDriveMotor.setSpeed(175f);
-				rightDriveMotor.setSpeed(200f);
+				turnHardRight();
 			} else if (lastColor == 2) {
-				leftDriveMotor.setSpeed(200f);
-				rightDriveMotor.setSpeed(175f);
+				turnHardLeft();
 			}
 		} else {
 			resetSpeed();
 		}
-		
+		lastColor = color;
+	}
+	
+	// White == 6
+	// Black == 7
+	// Green == 2
+	// Red == 0
+	private void lineFollowSouth() {
+		int color = getColorId();
+		if (color == 7) { //turn left
+			turnRight();
+		} else if (color == 2) { // turn right
+			turnLeft();
+		} else if (color == 6) {
+			if (lastColor == 7) {
+				turnRight();
+			} else if (lastColor == 2) {
+				turnLeft();
+			}
+		} else {
+			resetSpeed();
+		}
+		lastColor = color;
+	}
+	
+	private void lineFollowEast() {
+		int color = getColorId();
+		if (color == 7) {
+			turnLeft();
+		} else if (color == 2) {
+			turnRight();
+		} else if (color == 6) {
+			if (lastColor == 7) {
+				turnHardRight();
+			} else if (lastColor == 2) {
+				turnHardLeft();
+			}
+		} else {
+			resetSpeed();
+		}
+		lastColor = color;
+	}
+	
+	private void lineFollowWest() {
+		int color = getColorId();
+		if (color == 7) { //turn left
+			turnRight();
+		} else if (color == 2) { // turn right
+			turnLeft();
+		} else if (color == 6) {
+			if (lastColor == 7) {
+				turnRight();
+			} else if (lastColor == 2) {
+				turnLeft();
+			}
+		} else {
+			resetSpeed();
+		}
 		lastColor = color;
 	}
 	
@@ -164,12 +237,16 @@ public class Robot {
 	}
 	
 	public void resetSpeed() {
-		leftDriveMotor.setSpeed(DEFAULT_SPEED);
-		rightDriveMotor.setSpeed(DEFAULT_SPEED);
+		leftDriveMotor.setSpeed(SPEED);
+		rightDriveMotor.setSpeed(SPEED);
 	}
 	
 	public void map() {
 		mapMaker.map();
+	}
+	
+	public void setOrientation(Orientation orientation) {
+		currentOrientation = orientation;
 	}
 	
 	public static void debugPause(String message) {

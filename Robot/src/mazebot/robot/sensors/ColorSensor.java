@@ -7,6 +7,10 @@ import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
 import mazebot.robot.Robot;
 
+// White == 6
+// Black == 7
+// Green == 2
+// Red == 0
 
 public class ColorSensor extends Thread {
 

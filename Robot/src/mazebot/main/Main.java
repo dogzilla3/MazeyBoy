@@ -5,9 +5,14 @@ import lejos.hardware.Key;
 import lejos.hardware.KeyListener;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
+import mazebot.behaviors.Behavior;
+import mazebot.behaviors.TravelToNextSquare;
 import mazebot.robot.Robot;
 
 public class Main {
+	
+	//Initialize the robot
+	public static Robot robot = new Robot();
 	
 	public static void main(String[] args) {
 		
@@ -17,11 +22,7 @@ public class Main {
 		//Add escape button listener to exit the program
 		addEscapeListener();
 
-	
-		//Initialize the robot
-		Robot robot = new Robot();
-		
-		//Behavior testing = new TravelToNextSquare(robot);
+		Behavior travelToNextSquare = new TravelToNextSquare(robot);
 		//Behavior testing1 = new TurnLeft(robot);
 		
 		//Initialize the behavior of the robot
@@ -29,7 +30,8 @@ public class Main {
 
 		//Main loop of program
 		while(!Button.ESCAPE.isDown()) {
-			Robot.say("" + robot.getColorId());
+			robot.changeBehavior(travelToNextSquare);
+			robot.forward();
 			System.gc();
 		}
 		displayEndScreen();
@@ -63,11 +65,15 @@ public class Main {
 		Button.ESCAPE.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(Key k) {
+				robot.halt();
 				System.exit(0);
 			}
 
 			@Override
-			public void keyReleased(Key k) {}		
+			public void keyReleased(Key k) {
+				robot.halt();
+				System.exit(0);
+			}		
 		});
 	}
 }
