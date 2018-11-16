@@ -6,6 +6,8 @@ import mazebot.robot.Robot;
 import mazebot.robot.sensors.IRSensor;
 import mazebot.robot.sensors.UltrasonicSensor;
 
+
+
 public class MapMaker {
 	
 	private UltrasonicSensor leftWallSensor;

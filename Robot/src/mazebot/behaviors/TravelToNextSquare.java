@@ -13,7 +13,7 @@ public class TravelToNextSquare extends Behavior {
 	@Override
 	public void run() {
 		robot.forward();
-		if(robot.getColorId() == 0) {
+		if(robot.getColorId() == Robot.RED) {
 			robot.halt();
 			
 			/*
