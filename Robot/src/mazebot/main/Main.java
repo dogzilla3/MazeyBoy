@@ -15,6 +15,7 @@ public class Main {
 	public static Robot robot = new Robot();
 	
 	public static void main(String[] args) {
+		robot.halt();
 		
 		//Setup the screen to start on button press
 		displayStartScreen();
@@ -25,13 +26,12 @@ public class Main {
 		Behavior travelToNextSquare = new TravelToNextSquare(robot);
 		//Behavior testing1 = new TurnLeft(robot);
 		
-		//Initialize the behavior of the robot
-		//robot.changeBehavior(testing);
-
+		robot.changeBehavior(travelToNextSquare);
+		robot.setOrientation(Robot.Orientation.NORTH);
 		//Main loop of program
 		while(!Button.ESCAPE.isDown()) {
-			robot.changeBehavior(travelToNextSquare);
-			robot.forward();
+			Robot.say(robot.getCurrentOrientation().name());
+			robot.runBehavior();
 			System.gc();
 		}
 		displayEndScreen();

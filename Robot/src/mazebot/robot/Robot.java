@@ -10,7 +10,7 @@ import lejos.utility.Delay;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import mazebot.behaviors.Behavior;
-import mazebot.behaviors.TurnLeft;
+import mazebot.behaviors.TurnTo;
 import mazebot.robot.mapmaker.MapMaker;
 import mazebot.robot.sensors.ColorSensor;
 import java.io.File;
@@ -29,7 +29,7 @@ public class Robot {
 	//private static File searchingSound = new File("zSearching.wav");
 	public static enum Sounds{ UP, DOWN; }
 	public static enum Wav{ SEARCHING, CENTERING, APPROACHING, ENGAGING; }
-	public static enum Orientation{ NORTH, SOUTH, EAST, WEST; }
+	public static enum Orientation{ NORTH, EAST, SOUTH, WEST; } //DO NOT CHANGE THIS YA BOOBS
 	
 	public Robot(){
 		leftDriveMotor = new EV3LargeRegulatedMotor(MotorPort.A);
@@ -41,6 +41,8 @@ public class Robot {
 		colorSensor = new ColorSensor(SensorPort.S1); 
 		colorSensor.start();
 		lastColor = -1;
+		resetSpeed();
+		halt();
 	}
 	
 	public void runBehavior() {
@@ -151,9 +153,9 @@ public class Robot {
 			turnLeft();
 		} else if (color == 6) {
 			if (lastColor == 7) {
-				turnRight();
+				turnHardRight();
 			} else if (lastColor == 2) {
-				turnLeft();
+				turnHardLeft();
 			}
 		} else {
 			resetSpeed();
@@ -179,6 +181,11 @@ public class Robot {
 		lastColor = color;
 	}
 	
+	// White == 6
+	// Black == 7
+	// Green == 2
+	// Red == 0
+	
 	private void lineFollowWest() {
 		int color = getColorId();
 		if (color == 7) { //turn left
@@ -187,9 +194,9 @@ public class Robot {
 			turnLeft();
 		} else if (color == 6) {
 			if (lastColor == 7) {
-				turnRight();
+				turnHardLeft();
 			} else if (lastColor == 2) {
-				turnLeft();
+				turnHardRight();
 			}
 		} else {
 			resetSpeed();
@@ -197,34 +204,50 @@ public class Robot {
 		lastColor = color;
 	}
 	
-	public void pivotLeft() {
-		resetSpeed();
-		leftDriveMotor.startSynchronization();
-		leftDriveMotor.backward();
-		rightDriveMotor.forward();
-		leftDriveMotor.endSynchronization();
-		switch(currentOrientation) {
-			case NORTH: currentOrientation = Orientation.WEST; break;
-			case SOUTH: currentOrientation = Orientation.EAST; break;
-			case EAST: currentOrientation = Orientation.NORTH; break;
-			case WEST: currentOrientation = Orientation.SOUTH; break;
+	public void pivotTowards(Orientation newOrientation) {
+		int currentDirection = currentOrientation.ordinal();
+		int desiredDirection = newOrientation.ordinal();
+		
+		int turn = desiredDirection - currentDirection;
+		say(""+currentDirection);
+		say("" + desiredDirection);
+		switch(turn) {
+			case 3:
+			case -1: {
+				resetSpeed();
+				leftDriveMotor.startSynchronization();
+				leftDriveMotor.forward();
+				rightDriveMotor.backward();
+				leftDriveMotor.endSynchronization();
+				say("left turn");
+				break;
+			}
+			case 0: 
+				break;
+			default: {
+				resetSpeed();
+				leftDriveMotor.startSynchronization();
+				leftDriveMotor.backward();
+				rightDriveMotor.forward();
+				leftDriveMotor.endSynchronization();
+				say("right turn");
+				break;
+			}
 		}
 	}
 	
-	public void pivotRight() {
-		resetSpeed();
-		leftDriveMotor.startSynchronization();
-		leftDriveMotor.forward();
-		rightDriveMotor.backward();
-		leftDriveMotor.endSynchronization();
-		switch(currentOrientation) {
-			case NORTH: currentOrientation = Orientation.EAST; break;
-			case SOUTH: currentOrientation = Orientation.WEST; break;
-			case EAST: currentOrientation = Orientation.SOUTH; break;
-			case WEST: currentOrientation = Orientation.NORTH; break;
-		}
-	}
-	
+//	public void pivotRight() {
+//
+//	}
+//	
+//	public void pivotLeft() {
+//		resetSpeed();
+//		leftDriveMotor.startSynchronization();
+//		leftDriveMotor.forward();
+//		rightDriveMotor.backward();
+//		leftDriveMotor.endSynchronization();
+//	}
+//	
 	public void updateOrientation() {
 		
 	}

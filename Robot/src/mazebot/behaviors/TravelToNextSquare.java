@@ -8,16 +8,26 @@ public class TravelToNextSquare extends Behavior {
 
 	public TravelToNextSquare(Robot robot) {
 		super(robot);
-		robot.forward();
 	}
 
 	@Override
 	public void run() {
+		robot.forward();
 		if(robot.getColorId() == 0) {
 			robot.halt();
+			
+			/*
+			 * ******************
+			 * ADD MAPPING HERE *
+			 * ******************
+			 * robot.map();
+			 * robot.getNextOrientation();
+			 */
+			
+			robot.forward();
+			Delay.msDelay(1000);
+			robot.halt();
+			robot.changeBehavior(new TestAlwaysTurnRight(robot));
 		}
 	}
-	
-	
-	
 }

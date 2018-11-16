@@ -1,5 +1,6 @@
 package mazebot.behaviors;
 
+import lejos.utility.Delay;
 import mazebot.robot.Robot;
 
 public class RunMapScan extends Behavior {
@@ -11,10 +12,10 @@ public class RunMapScan extends Behavior {
 
 	@Override
 	public void run() {
-		robot.map();
+		//robot.map();
 		//robot.getNextOrientation();
-		
-		robot.changeBehavior(new TurnLeft(robot));
+		Delay.msDelay(3000);
+		//robot.changeBehavior(new TurnTo(robot));
 	}
 
 }
