@@ -12,15 +12,15 @@ import mazebot.robot.Robot;
 // Green == 2
 // Red == 0
 
-public class ColorSensor extends Thread {
+public class ColorSensor implements Runnable {
 
-	private volatile int foundColor = 0;
+	private volatile int foundColor = -1;
   
     private EV3ColorSensor ev3ColorSensor;
     
     @Override
     public void run() {
-    	while(true) {
+    	while(true) { // Continuously get the color from the sensor
         	foundColor = ev3ColorSensor.getColorID();
     	}
     }

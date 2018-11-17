@@ -17,46 +17,62 @@ public class Robot {
 	public static final int BLACK = 7;
 	public static final int GREEN = 2;
 	public static final int RED = 0;
-	private final float SPEED = 150f;
+	public static final float SPEED = 150f;
+	
 	private EV3LargeRegulatedMotor leftDriveMotor;
 	private EV3LargeRegulatedMotor rightDriveMotor;
 	private ColorSensor colorSensor;
-	private Behavior behavior;
-	private Orientation currentOrientation;
-	private MapMaker mapMaker;
+	private Thread colorSensorThread;
 	private int lastColor;
-
+	
+	private Behavior currentBehavior;
+	private MapMaker mapMaker;
+	
 	// private static File searchingSound = new File("zSearching.wav");
 	public static enum Sounds { UP, DOWN; }
 	public static enum Wav { SEARCHING, CENTERING, APPROACHING, ENGAGING; }
 	public static enum Orientation { NORTH, EAST, SOUTH, WEST; } // DO NOT CHANGE THIS YA BOOBS
+	private Orientation currentOrientation;
 
 	public Robot() {
-		leftDriveMotor = new EV3LargeRegulatedMotor(MotorPort.A);
-		rightDriveMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+		initialize();
+	}
+	
+	private void initialize() {
+		leftDriveMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+		rightDriveMotor = new EV3LargeRegulatedMotor(MotorPort.A);
 		currentOrientation = Orientation.NORTH;
 		mapMaker = new MapMaker(this);
 		colorSensor = new ColorSensor(SensorPort.S1);
-		colorSensor.start();
+		colorSensorThread = new Thread(colorSensor);
+		colorSensorThread.start();
 		lastColor = -1;
 		resetSpeed();
 		halt();
 	}
 
 	public void runBehavior() {
-		if (behavior != null) {
-			behavior.run();
+		if (currentBehavior != null) {
+			currentBehavior.run();
 		} else {
 			say("I dont know what to do!");
 		}
 	}
 
 	public void changeBehavior(Behavior newBehavior) {
-		this.behavior = newBehavior;
+		this.currentBehavior = newBehavior;
 	}
 
 	public int getColorId() {
 		return colorSensor.getColor();
+	}
+	
+	public void setLastColor(int color) {
+		if(color == RED) lastColor = RED;
+		else if(color == BLACK) lastColor = BLACK;
+		else if(color == GREEN) lastColor = GREEN;
+		else if(color == WHITE) lastColor = WHITE;
+		else if(color == -1) lastColor = -1;
 	}
 
 	public Orientation getCurrentOrientation() {
@@ -67,10 +83,7 @@ public class Robot {
 		currentOrientation = newOrientation;
 	}
 
-	public void forward() {
-		leftDriveMotor.forward();
-		rightDriveMotor.forward();
-
+	public void lineFollow() {
 		switch (currentOrientation) {
 			case NORTH: lineFollowNorth(); break;
 			case SOUTH: lineFollowSouth(); break;
@@ -107,7 +120,7 @@ public class Robot {
 			if (lastColor == BLACK) turnHardLeft();
 			else if (lastColor == GREEN) turnHardRight();
 		}
-		lastColor = color;
+		setLastColor(color);
 	}
 
 	private void lineFollowSouth() {
@@ -118,7 +131,7 @@ public class Robot {
 			if (lastColor == BLACK) turnHardRight();
 			else if (lastColor == GREEN) turnHardLeft();
 		}
-		lastColor = color;
+		setLastColor(color);
 	}
 
 	private void lineFollowEast() {
@@ -129,7 +142,7 @@ public class Robot {
 			if (lastColor == BLACK) turnHardLeft();
 			else if (lastColor == GREEN) turnHardRight();
 		}
-		lastColor = color;
+		setLastColor(color);
 	}
 
 	private void lineFollowWest() {
@@ -140,28 +153,7 @@ public class Robot {
 			if (lastColor == BLACK) turnHardRight();
 			else if (lastColor == GREEN) turnHardLeft();
 		}
-		lastColor = color;
-	}
-
-	public void pivotTowards(Orientation newOrientation) {
-		int currentDirection = currentOrientation.ordinal();
-		int desiredDirection = newOrientation.ordinal();
-		int turn = desiredDirection - currentDirection;
-		switch (turn) {
-			case 3:
-			case -1: pivotLeft(); break;
-			case 0: break;
-			default: pivotRight(); break;
-		}
-	}
-	
-	public boolean isTurningAround(Orientation newOrientation) {
-		int currentDirection = currentOrientation.ordinal();
-		int desiredDirection = newOrientation.ordinal();
-		int turn = desiredDirection - currentDirection;	
-		
-		if(Math.abs(turn) == 2) return true;
-		else return false;
+		setLastColor(color);
 	}
 
 	public void pivotRight() {

@@ -13,8 +13,11 @@ public class Main {
 	
 	//Initialize the robot
 	public static Robot robot = new Robot();
+
+	public static boolean running = true;
 	
 	public static void main(String[] args) {
+		
 		robot.halt();
 		
 		//Setup the screen to start on button press
@@ -28,8 +31,10 @@ public class Main {
 		
 		robot.changeBehavior(travelToNextSquare);
 		robot.setOrientation(Robot.Orientation.NORTH);
+		boolean running = true;
+		
 		//Main loop of program
-		while(!Button.ESCAPE.isDown()) {
+		while(running == true) {
 			Robot.say(robot.getCurrentOrientation().name());
 			robot.runBehavior();
 			System.gc();
@@ -66,13 +71,13 @@ public class Main {
 			@Override
 			public void keyPressed(Key k) {
 				robot.halt();
-				System.exit(0);
+				running = false;
 			}
 
 			@Override
 			public void keyReleased(Key k) {
 				robot.halt();
-				System.exit(0);
+				running = false;
 			}		
 		});
 	}

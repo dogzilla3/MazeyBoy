@@ -13,4 +13,16 @@ public class HaltingBehavior extends Behavior {
 		robot.halt();
 	}
 
+	@Override
+	protected void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
