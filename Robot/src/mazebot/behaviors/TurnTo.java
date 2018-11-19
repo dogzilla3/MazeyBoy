@@ -13,17 +13,17 @@ public class TurnTo extends Behavior {
 	public TurnTo(Robot robot, Robot.Orientation orientation) {
 		super(robot);
 		newOrientation = orientation;
+
+		//Find out which direction we should turn using a little math: Thanks Geordie Dosher!
+		int currentDirection = robot.getCurrentOrientation().ordinal();
+		int desiredDirection = newOrientation.ordinal();
+		turn = desiredDirection - currentDirection;
 	}
 
 	@Override
 	protected void initialize() {
 		// Halt the robot if it was moving previously
 		robot.halt();
-		
-		//Find out which direction we should turn using a little math: Thanks Geordie Dosher!
-		int currentDirection = robot.getCurrentOrientation().ordinal();
-		int desiredDirection = robot.getCurrentOrientation().ordinal();
-		int turn = desiredDirection - currentDirection;
 	}
 
 	/**
@@ -32,57 +32,53 @@ public class TurnTo extends Behavior {
 	@Override
 	protected void execute() {
 		if(turn == 3 || turn == -1) { 		// The desired direction is to the left
-			while(color != Robot.WHITE) { 		// Keep turning left until we see white
-				robot.pivotLeft();
-				color = robot.getColorId();
-			}									// After we see white
-			while(color == Robot.WHITE) {		// Keep turning left until we don't see white
-				robot.pivotLeft();
-				color = robot.getColorId();
-			}
-			robot.halt();
-			robot.setOrientation(newOrientation);
-			robot.changeBehavior(new TravelToNextSquare(robot));	
+			turnLeft();
 		} 
 		
-		else if (turn == -1) {// The robot is currently on the desired direction
-			robot.changeBehavior(new TravelToNextSquare(robot));
+		else if (turn == 0) {// The robot is currently on the desired direction
+			
 		} 
 		
-		else if (turn == 2) {				// The desired direction is behind the robot
-			while(color != Robot.WHITE) {		// Keep turning left until we see white
-				robot.pivotLeft();
-				color = robot.getColorId();
-			}									// After we see white
-			while(color == Robot.WHITE) {		// Keep turning left until we don't see white
-				robot.pivotLeft();
-				color = robot.getColorId();
-			}									// After we don't see white
-			while(color != Robot.WHITE) {		// Keep turning left until we see white
-				robot.pivotLeft();
-				color = robot.getColorId();
-			}									// After we see white
-			while(color == Robot.WHITE) {		// Keep turning left until we don't see white
-				robot.pivotLeft();
-				color = robot.getColorId();
-			}
-			robot.halt();
-			robot.setOrientation(newOrientation);
-			robot.changeBehavior(new TravelToNextSquare(robot));	
+		else if (Math.abs(turn) == 2) {				// The desired direction is behind the robot
+			turnRight();
+			turnRight();
 		} 
 		
-		else { 								// The desired direction is to the right
-			while(color != Robot.WHITE) {		// Keep turning right until we see white
-				robot.pivotRight();
-				color = robot.getColorId();
-			}									// After we see white
-			while(color == Robot.WHITE) {		// Keep turning right until we don't see white
-				robot.pivotRight();
-				color = robot.getColorId();
-			}
-			robot.halt();
-			robot.setOrientation(newOrientation);
-			robot.changeBehavior(new TravelToNextSquare(robot));	
+		else { 								
+			turnRight();
+		}
+		robot.halt();
+		robot.setOrientation(newOrientation);
+		robot.changeBehavior(new TravelToNextSquare(robot));	
+	}
+	
+	private void turnLeft() {
+		while(color != Robot.WHITE) {
+			robot.pivotLeft();
+			color = robot.getColorId();
+		}
+		while (color != Robot.BLACK) {
+			robot.pivotLeft();
+			color = robot.getColorId();
+		}
+		while(color != Robot.WHITE) {
+			robot.pivotLeft();
+			color = robot.getColorId();
+		}
+	}
+	
+	private void turnRight(){				// The desired direction is to the right
+		while(color != Robot.BLACK) {		// Keep turning right until we see white
+			robot.pivotRight();
+			color = robot.getColorId();
+		}									// After we see white
+		while(color != Robot.WHITE) {		// Keep turning right until we don't see white
+			robot.pivotRight();
+			color = robot.getColorId();
+		}
+		while(color != Robot.BLACK) {		// Keep turning right until we don't see white
+			robot.pivotRight();
+			color = robot.getColorId();
 		}
 	}
 }

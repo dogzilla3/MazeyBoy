@@ -37,7 +37,6 @@ public class Main {
 		while(running == true) {
 			Robot.say(robot.getCurrentOrientation().name());
 			robot.runBehavior();
-			System.gc();
 		}
 		displayEndScreen();
 	}

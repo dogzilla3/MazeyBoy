@@ -12,32 +12,43 @@ import mazebot.robot.sensors.ColorSensor;
 import java.io.File;
 
 public class Robot {
-	
+
 	public static final int WHITE = 6;
 	public static final int BLACK = 7;
 	public static final int GREEN = 2;
 	public static final int RED = 0;
 	public static final float SPEED = 150f;
-	
+
 	private EV3LargeRegulatedMotor leftDriveMotor;
 	private EV3LargeRegulatedMotor rightDriveMotor;
 	private ColorSensor colorSensor;
 	private Thread colorSensorThread;
 	private int lastColor;
-	
+	private boolean offGreen = false;
+	private boolean offBlack = false;
+
 	private Behavior currentBehavior;
 	private MapMaker mapMaker;
-	
+
 	// private static File searchingSound = new File("zSearching.wav");
-	public static enum Sounds { UP, DOWN; }
-	public static enum Wav { SEARCHING, CENTERING, APPROACHING, ENGAGING; }
-	public static enum Orientation { NORTH, EAST, SOUTH, WEST; } // DO NOT CHANGE THIS YA BOOBS
+	public static enum Sounds {
+		UP, DOWN;
+	}
+
+	public static enum Wav {
+		SEARCHING, CENTERING, APPROACHING, ENGAGING;
+	}
+
+	public static enum Orientation {
+		NORTH, EAST, SOUTH, WEST;
+	} // DO NOT CHANGE THIS YA BOOBS
+
 	private Orientation currentOrientation;
 
 	public Robot() {
 		initialize();
 	}
-	
+
 	private void initialize() {
 		leftDriveMotor = new EV3LargeRegulatedMotor(MotorPort.B);
 		rightDriveMotor = new EV3LargeRegulatedMotor(MotorPort.A);
@@ -60,20 +71,27 @@ public class Robot {
 	}
 
 	public void changeBehavior(Behavior newBehavior) {
+		System.gc();
 		this.currentBehavior = newBehavior;
 	}
 
 	public int getColorId() {
 		return colorSensor.getColor();
 	}
-	
+
 	public void setLastColor(int color) {
-		if(color == RED) lastColor = RED;
-		else if(color == BLACK) lastColor = BLACK;
-		else if(color == GREEN) lastColor = GREEN;
-		else if(color == WHITE) lastColor = WHITE;
-		else if(color == -1) lastColor = -1;
+			if (color == RED)
+				lastColor = RED;
+			else if (color == BLACK)
+				lastColor = BLACK;
+			else if (color == GREEN)
+				lastColor = GREEN;
+			else if (color == WHITE)
+				lastColor = WHITE;
+			else if (color == -1)
+				lastColor = -1;
 	}
+
 
 	public Orientation getCurrentOrientation() {
 		return currentOrientation;
@@ -83,13 +101,36 @@ public class Robot {
 		currentOrientation = newOrientation;
 	}
 
+	public void forward() {
+		leftDriveMotor.forward();
+		rightDriveMotor.forward();
+	}
+
 	public void lineFollow() {
-		switch (currentOrientation) {
-			case NORTH: lineFollowNorth(); break;
-			case SOUTH: lineFollowSouth(); break;
-			case EAST: lineFollowEast(); break;
-			case WEST: lineFollowWest(); break;
+		int color = getColorId();
+		if(color == BLACK) {
+			turnLeft();
+		}else if(color == WHITE) {
+			turnRight();
 		}
+		
+		say("lastColor: " + lastColor);
+
+		setLastColor(color);
+//		switch (currentOrientation) {
+//		case NORTH:
+//			lineFollowNorth();
+//			break;
+//		case SOUTH:
+//			lineFollowSouth();
+//			break;
+//		case EAST:
+//			lineFollowEast();
+//			break;
+//		case WEST:
+//			lineFollowWest();
+//			break;
+//		}
 	}
 
 	private void turnLeft() {
@@ -109,51 +150,83 @@ public class Robot {
 
 	private void turnHardRight() {
 		leftDriveMotor.setSpeed(SPEED);
-		rightDriveMotor.setSpeed(SPEED - 1000);
+		rightDriveMotor.setSpeed(SPEED - 100);
 	}
 
 	private void lineFollowNorth() {
+
+//		if (color == WHITE && offBlack == false && offGreen == false) {
+//			if (lastColor == BLACK) {
+//				offBlack = true;
+//				turnHardLeft();
+//			} else if (lastColor == GREEN) {
+//				offGreen = true;
+//				turnHardRight();
+//			}
+//		} else if (color == BLACK) {
+//			offBlack = false;
+//			turnLeft();
+//		} else if (color == GREEN) {
+//			offGreen = false;
+//			turnRight();
+//		} else if(offBlack) {
+//			turnHardLeft();
+//		} else if(offGreen) {
+//			turnHardRight();
+//		}
 		int color = getColorId();
-		if (color == BLACK) turnLeft();
-		else if (color == GREEN) turnRight();
-		else if (color == WHITE) {
-			if (lastColor == BLACK) turnHardLeft();
-			else if (lastColor == GREEN) turnHardRight();
+		if(color == BLACK) {
+			turnLeft();
+		}else if(color == WHITE) {
+			turnRight();
 		}
+		
+		say("lastColor: " + lastColor);
+
 		setLastColor(color);
+
 	}
 
 	private void lineFollowSouth() {
 		int color = getColorId();
-		if (color == BLACK) turnRight();
-		else if (color == GREEN) turnLeft();
-		else if (color == WHITE) {
-			if (lastColor == BLACK) turnHardRight();
-			else if (lastColor == GREEN) turnHardLeft();
+		if(color == BLACK) {
+			turnLeft();
+		}else if(color == WHITE) {
+			turnRight();
 		}
+		
+		say("lastColor: " + lastColor);
+
 		setLastColor(color);
+
 	}
 
 	private void lineFollowEast() {
 		int color = getColorId();
-		if (color == BLACK) turnLeft();
-		else if (color == GREEN) turnRight();
-		else if (color == WHITE) {
-			if (lastColor == BLACK) turnHardLeft();
-			else if (lastColor == GREEN) turnHardRight();
+		if(color == BLACK) {
+			turnLeft();
+		}else if(color == WHITE) {
+			turnRight();
 		}
+		
+		say("lastColor: " + lastColor);
+
 		setLastColor(color);
+
 	}
 
 	private void lineFollowWest() {
 		int color = getColorId();
-		if (color == BLACK) turnRight();
-		else if (color == GREEN) turnLeft();
-		else if (color == WHITE) {
-			if (lastColor == BLACK) turnHardRight();
-			else if (lastColor == GREEN) turnHardLeft();
+		if(color == BLACK) {
+			turnLeft();
+		}else if(color == WHITE) {
+			turnRight();
 		}
+		
+		say("lastColor: " + lastColor);
+
 		setLastColor(color);
+
 	}
 
 	public void pivotRight() {
@@ -185,19 +258,25 @@ public class Robot {
 	public void setOrientation(Orientation orientation) {
 		currentOrientation = orientation;
 	}
-	
+
 	public static void say(String message) {
 		System.out.println(message);
 	}
 
 	public void beep(Sounds sound) {
 		switch (sound) {
-		case UP: Sound.beepSequenceUp(); break;
-		case DOWN: Sound.beepSequence(); break;
-		default: Sound.beep(); break;
+		case UP:
+			Sound.beepSequenceUp();
+			break;
+		case DOWN:
+			Sound.beepSequence();
+			break;
+		default:
+			Sound.beep();
+			break;
 		}
 	}
-	
+
 	public static void beep() {
 		Sound.beep();
 	}
@@ -217,7 +296,9 @@ public class Robot {
 //	        case CENTERING: Sound.playSample(centeringSound, Sound.VOL_MAX); break; 
 //			case APPROACHING: Sound.playSample(approachingSound, Sound.VOL_MAX); break; 
 //	        case ENGAGING: Sound.playSample(engagingSound, Sound.VOL_MAX); break; 
-		default: Sound.beep(); break;
+		default:
+			Sound.beep();
+			break;
 		}
 	}
 

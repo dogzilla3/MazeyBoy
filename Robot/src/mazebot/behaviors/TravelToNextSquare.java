@@ -15,6 +15,7 @@ public class TravelToNextSquare extends Behavior {
 	protected void initialize() {
 		//Clear the last color before line following
 		robot.setLastColor(-1);
+		robot.forward();
 	}
 
 	/**
@@ -27,7 +28,7 @@ public class TravelToNextSquare extends Behavior {
 			color = robot.getColorId();
 			robot.lineFollow();
 		}
-		robot.halt();
+		robot.resetSpeed();
 		
 		/*									// Map our current square
 		 * ******************
@@ -37,12 +38,12 @@ public class TravelToNextSquare extends Behavior {
 		 * robot.getNextOrientation();
 		 */
 		
-		robot.resetSpeed();					//Move forward then stop
-		Delay.msDelay(1000);
+						
+		Delay.msDelay(1200);				//Move forward then stop
 		robot.halt();
 		
 		//This method will change to something similar
 		//robot.changeBehavior(new TurnTo(robot.getNextOrientation());
-		robot.changeBehavior(new TestAlwaysTurnRight(robot)); // <--for testing purposes
+		robot.changeBehavior(new TestAlwaysTurnLeft(robot)); // <--for testing purposes
 	}
 }

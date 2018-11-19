@@ -27,7 +27,8 @@ public class ColorSensor implements Runnable {
 	
 	public ColorSensor(Port port) {
 		ev3ColorSensor = new EV3ColorSensor(port);
-		ev3ColorSensor.setFloodlight(Color.WHITE); 
+		//ev3ColorSensor.setFloodlight(Color.RED); 
+		ev3ColorSensor.setFloodlight(true);
 	}
 
 	public int getColor() {
