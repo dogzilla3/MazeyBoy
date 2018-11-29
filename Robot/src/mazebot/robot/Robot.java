@@ -17,7 +17,7 @@ public class Robot {
 	public static final int BLACK = 7;
 	public static final int GREEN = 2;
 	public static final int RED = 0;
-	public static final float SPEED = 150f;
+	public static final float SPEED = 200f;
 
 	private EV3LargeRegulatedMotor leftDriveMotor;
 	private EV3LargeRegulatedMotor rightDriveMotor;
@@ -134,24 +134,24 @@ public class Robot {
 	}
 
 	private void turnLeft() {
-		leftDriveMotor.setSpeed(SPEED - 50);
-		rightDriveMotor.setSpeed(SPEED);
-	}
-
-	private void turnHardLeft() {
 		leftDriveMotor.setSpeed(SPEED - 100);
 		rightDriveMotor.setSpeed(SPEED);
 	}
 
-	private void turnRight() {
-		leftDriveMotor.setSpeed(SPEED);
-		rightDriveMotor.setSpeed(SPEED - 50);
-	}
+//	private void turnHardLeft() {
+//		leftDriveMotor.setSpeed(SPEED - 100);
+//		rightDriveMotor.setSpeed(SPEED);
+//	}
 
-	private void turnHardRight() {
+	private void turnRight() {
 		leftDriveMotor.setSpeed(SPEED);
 		rightDriveMotor.setSpeed(SPEED - 100);
 	}
+
+//	private void turnHardRight() {
+//		leftDriveMotor.setSpeed(SPEED);
+//		rightDriveMotor.setSpeed(SPEED - 100);
+//	}
 
 	private void lineFollowNorth() {
 
