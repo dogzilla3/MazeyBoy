@@ -5,6 +5,7 @@ import lejos.hardware.Key;
 import lejos.hardware.KeyListener;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
+import lejos.utility.Delay;
 import mazebot.behaviors.Behavior;
 import mazebot.behaviors.TravelToNextSquare;
 import mazebot.robot.Robot;
@@ -32,11 +33,13 @@ public class Main {
 		robot.changeBehavior(travelToNextSquare);
 		robot.setOrientation(Robot.Orientation.NORTH);
 		boolean running = true;
-		
+		robot.halt();
 		//Main loop of program
 		while(running == true) {
-			Robot.say(robot.getCurrentOrientation().name());
-			robot.runBehavior();
+			Delay.msDelay(500);
+			Robot.say("F:" + robot.getFrontWall());
+			Robot.say("");
+			//robot.runBehavior();
 		}
 		displayEndScreen();
 	}

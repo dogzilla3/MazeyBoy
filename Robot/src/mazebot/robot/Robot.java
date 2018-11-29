@@ -17,7 +17,7 @@ public class Robot {
 	public static final int BLACK = 7;
 	public static final int GREEN = 2;
 	public static final int RED = 0;
-	public static final float SPEED = 200f;
+	public static final float SPEED = 150f;
 
 	private EV3LargeRegulatedMotor leftDriveMotor;
 	private EV3LargeRegulatedMotor rightDriveMotor;
@@ -134,7 +134,7 @@ public class Robot {
 	}
 
 	private void turnLeft() {
-		leftDriveMotor.setSpeed(SPEED - 100);
+		leftDriveMotor.setSpeed(SPEED - 50);
 		rightDriveMotor.setSpeed(SPEED);
 	}
 
@@ -145,7 +145,7 @@ public class Robot {
 
 	private void turnRight() {
 		leftDriveMotor.setSpeed(SPEED);
-		rightDriveMotor.setSpeed(SPEED - 100);
+		rightDriveMotor.setSpeed(SPEED - 50);
 	}
 
 //	private void turnHardRight() {
@@ -253,6 +253,18 @@ public class Robot {
 
 	public void map() {
 		mapMaker.map();
+	}
+	
+	public float getLeftWall() {
+		return mapMaker.getLeftWallDistance();
+	}
+	
+	public float getRightWall() {
+		return mapMaker.getRightWallDistance();
+	}
+	
+	public float getFrontWall() {
+		return mapMaker.getFrontWallDistance();
 	}
 
 	public void setOrientation(Orientation orientation) {

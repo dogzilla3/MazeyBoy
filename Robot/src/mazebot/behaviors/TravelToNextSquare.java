@@ -39,7 +39,7 @@ public class TravelToNextSquare extends Behavior {
 		 */
 		
 						
-		Delay.msDelay(1200);				//Move forward then stop
+		Delay.msDelay(1000);				//Move forward then stop
 		robot.halt();
 		
 		//This method will change to something similar

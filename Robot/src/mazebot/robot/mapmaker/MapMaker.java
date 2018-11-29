@@ -72,5 +72,15 @@ public class MapMaker {
 //			break;
 	}
 
+	public float getLeftWallDistance() {
+		return leftWallSensor.getRange();
+	}
+	
+	public float getRightWallDistance() {
+		return rightWallSensor.getRange();
+	}
 
+	public float getFrontWallDistance() {
+		return frontWallSensor.getRange();
+	}
 }
