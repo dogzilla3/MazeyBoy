@@ -28,7 +28,7 @@ public class Robot {
 	private boolean offBlack = false;
 
 	private Behavior currentBehavior;
-	private MapMaker mapMaker;
+	public MapMaker mapMaker;
 
 	// private static File searchingSound = new File("zSearching.wav");
 	public static enum Sounds {
@@ -113,24 +113,6 @@ public class Robot {
 		}else if(color == WHITE) {
 			turnRight();
 		}
-		
-		say("lastColor: " + lastColor);
-
-		setLastColor(color);
-//		switch (currentOrientation) {
-//		case NORTH:
-//			lineFollowNorth();
-//			break;
-//		case SOUTH:
-//			lineFollowSouth();
-//			break;
-//		case EAST:
-//			lineFollowEast();
-//			break;
-//		case WEST:
-//			lineFollowWest();
-//			break;
-//		}
 	}
 
 	private void turnLeft() {
@@ -153,81 +135,6 @@ public class Robot {
 //		rightDriveMotor.setSpeed(SPEED - 100);
 //	}
 
-	private void lineFollowNorth() {
-
-//		if (color == WHITE && offBlack == false && offGreen == false) {
-//			if (lastColor == BLACK) {
-//				offBlack = true;
-//				turnHardLeft();
-//			} else if (lastColor == GREEN) {
-//				offGreen = true;
-//				turnHardRight();
-//			}
-//		} else if (color == BLACK) {
-//			offBlack = false;
-//			turnLeft();
-//		} else if (color == GREEN) {
-//			offGreen = false;
-//			turnRight();
-//		} else if(offBlack) {
-//			turnHardLeft();
-//		} else if(offGreen) {
-//			turnHardRight();
-//		}
-		int color = getColorId();
-		if(color == BLACK) {
-			turnLeft();
-		}else if(color == WHITE) {
-			turnRight();
-		}
-		
-		say("lastColor: " + lastColor);
-
-		setLastColor(color);
-
-	}
-
-	private void lineFollowSouth() {
-		int color = getColorId();
-		if(color == BLACK) {
-			turnLeft();
-		}else if(color == WHITE) {
-			turnRight();
-		}
-		
-		say("lastColor: " + lastColor);
-
-		setLastColor(color);
-
-	}
-
-	private void lineFollowEast() {
-		int color = getColorId();
-		if(color == BLACK) {
-			turnLeft();
-		}else if(color == WHITE) {
-			turnRight();
-		}
-		
-		say("lastColor: " + lastColor);
-
-		setLastColor(color);
-
-	}
-
-	private void lineFollowWest() {
-		int color = getColorId();
-		if(color == BLACK) {
-			turnLeft();
-		}else if(color == WHITE) {
-			turnRight();
-		}
-		
-		say("lastColor: " + lastColor);
-
-		setLastColor(color);
-
-	}
 
 	public void pivotRight() {
 		resetSpeed();
@@ -250,23 +157,7 @@ public class Robot {
 		leftDriveMotor.setSpeed(SPEED);
 		rightDriveMotor.setSpeed(SPEED);
 	}
-
-	public void map() {
-		mapMaker.map();
-	}
 	
-	public float getLeftWall() {
-		return mapMaker.getLeftWallDistance();
-	}
-	
-	public float getRightWall() {
-		return mapMaker.getRightWallDistance();
-	}
-	
-	public float getFrontWall() {
-		return mapMaker.getFrontWallDistance();
-	}
-
 	public void setOrientation(Orientation orientation) {
 		currentOrientation = orientation;
 	}

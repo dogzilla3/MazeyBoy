@@ -1,42 +1,44 @@
 package mazebot.robot.mapmaker.mapmakersupport;
 
 public class Direction {
-    
-    
+	
     boolean wall;
     boolean visited;
-    boolean leftFrom;
+    boolean arrivedFrom;
     
+    // If the Direction is a wall it will also be marked as visited, 
+    // so that dectection will overlook it on visit tests
     public Direction(boolean walledOff){
         wall = walledOff;
-        visited = false;
-        leftFrom = false;
+        visited = walledOff;
+        arrivedFrom = false;
     }
 
-    public Direction(boolean walledOff, boolean leftFrom){
-        wall = walledOff;
-        visited = false;
-        this.leftFrom = leftFrom;
+    public Direction(boolean walledOff, boolean cameFrom){
+    	this(walledOff);
+        arrivedFrom = cameFrom;
     }
     
     public Direction(Direction d){
         wall = d.isWall();
-        visited = d.hasVisted();
-        leftFrom = d.hasLeftFrom();
+        visited = d.hasVisited();
+        arrivedFrom = d.hasLeftFrom();
     }
-
-    //Direction() : this(false, false){}
     
-    public boolean hasVisted(){return visited;}
-    public boolean isWall(){return wall;}
-    public boolean hasLeftFrom(){return false;}
+    public boolean hasVisited()				{return visited;}
+    public boolean isWall()					{return wall;}
+    public boolean hasLeftFrom()			{return arrivedFrom;}
 
-    public void setVisted(boolean visit){
-        visited = visit;
-    }
-    public void setLeftFrom(boolean departed){
-        leftFrom = departed;
-    }
+    public void setVisited(boolean visit)	{visited = visit;}
 
-
+    public String getDirectionInfo(){
+    	if(wall)
+			return "W";
+		else if(visited)
+			return "V";
+		else if(arrivedFrom)
+			return "A";
+		else
+			return "0";
+	}
 }

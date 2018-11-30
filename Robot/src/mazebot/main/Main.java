@@ -33,13 +33,10 @@ public class Main {
 		robot.changeBehavior(travelToNextSquare);
 		robot.setOrientation(Robot.Orientation.NORTH);
 		boolean running = true;
-		robot.halt();
 		//Main loop of program
 		while(running == true) {
 			Delay.msDelay(500);
-			Robot.say("F:" + robot.getFrontWall());
-			Robot.say("");
-			//robot.runBehavior();
+			robot.runBehavior();
 		}
 		displayEndScreen();
 	}

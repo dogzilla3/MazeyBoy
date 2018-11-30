@@ -2,6 +2,7 @@ package mazebot.behaviors;
 
 import lejos.utility.Delay;
 import mazebot.robot.Robot;
+import mazebot.robot.Robot.Orientation;
 
 public class TravelToNextSquare extends Behavior {
 
@@ -24,26 +25,24 @@ public class TravelToNextSquare extends Behavior {
 	 */
 	@Override
 	protected void execute() {
-		while(color != Robot.RED) {			// If we don't see red follow the line
+		while(color != Robot.RED /* && color != Robot.BLUE*/) {			// If we don't see red follow the line
 			color = robot.getColorId();
 			robot.lineFollow();
 		}
 		robot.resetSpeed();
-		
-		/*									// Map our current square
-		 * ******************
-		 * ADD MAPPING HERE *
-		 * ******************
-		 * robot.map();
-		 * robot.getNextOrientation();
-		 */
-		
-						
 		Delay.msDelay(1000);				//Move forward then stop
-		robot.halt();
+		robot.halt();	
 		
-		//This method will change to something similar
-		//robot.changeBehavior(new TurnTo(robot.getNextOrientation());
-		robot.changeBehavior(new TestAlwaysTurnLeft(robot)); // <--for testing purposes
+		//Map our current square
+		if(color == Robot.RED) {
+			Orientation nextO = robot.mapMaker.traverseMap();
+			Robot.say(nextO.name());
+			Robot.say(robot.mapMaker.mapToASCIIString());
+			robot.changeBehavior(new TurnTo(robot, nextO));
+		}
+		else
+		{
+			robot.changeBehavior(new FinishBehavior(robot));
+		}
 	}
 }
