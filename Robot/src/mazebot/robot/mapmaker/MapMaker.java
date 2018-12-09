@@ -2,6 +2,7 @@ package mazebot.robot.mapmaker;
 
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import lejos.hardware.port.SensorPort;
 import mazebot.robot.Robot;
@@ -36,6 +37,7 @@ public class MapMaker {
 	
 	public  ArrayList<ArrayList<DestinationPoint>> map;
 	public  Path currentPath;
+	public 	Stack<Orientation> solvedPath;
 	private DestinationPoint newPoint;
 	
 
@@ -51,25 +53,37 @@ public class MapMaker {
 		//Map and Path
 		map = new ArrayList<ArrayList<DestinationPoint>>();
 		currentPath = new Path();
+		solvedPath = new Stack<Orientation>();
 		//Robot.playSound(Robot.Wav.MAPPING);
 	}
 	
 	public Orientation traverseMap() {
-		if(backtracking) {
-			return backTrack();
-		}else {
-			//get input from IR
-			Float fRange = frontWallSensor.getRange();
-			Direction iR = new Direction(fRange < 20f);
-			
-			//get input from left Ultrasonic
-			Float lRange = rightWallSensor.getRange();
-			Direction lUS = new Direction(lRange < 0.2f);
-			
-			//get input from right Ultrasonic
-			Float rRange = leftWallSensor.getRange();
-			Direction rUS =  new Direction(rRange < 0.2f);
-			return progressTraverse(iR, lUS, rUS);
+		if(solvedPath.empty()) {	
+			if(backtracking) {
+				return backTrack();
+			}else {
+				//get input from IR
+				Float fRange = frontWallSensor.getRange();
+				Direction iR = new Direction(fRange < 20f);
+				
+				//get input from left Ultrasonic
+				Float lRange = rightWallSensor.getRange();
+				Direction lUS = new Direction(lRange < 0.2f);
+				
+				//get input from right Ultrasonic
+				Float rRange = leftWallSensor.getRange();
+				Direction rUS =  new Direction(rRange < 0.2f);
+				return progressTraverse(iR, lUS, rUS);
+			}
+		} else {
+			return solvedPath.pop();
+		}
+	}
+	
+	public void setSolvedPath() {
+		while (currentPath.getEndPoint() != currentPath.getStartPoint()) {
+			solvedPath.push(Robot.opposite((currentPath.getEndPoint().cameFrom())));
+			currentPath.backTrackPath();
 		}
 	}
 	

@@ -2,6 +2,7 @@ package mazebot.behaviors;
 
 import mazebot.robot.Robot;
 import mazebot.robot.Robot.Orientation;
+import mazebot.robot.Robot.Wav;
 
 
 public class TurnTo extends Behavior {
@@ -31,6 +32,9 @@ public class TurnTo extends Behavior {
 	 */
 	@Override
 	protected void execute() {
+		if(turn != 0) {
+			//Robot.playSound(Wav.TURNING);	
+		}
 		if(turn == 3 || turn == -1) { 		// The desired direction is to the left
 			turnLeft();
 		} 

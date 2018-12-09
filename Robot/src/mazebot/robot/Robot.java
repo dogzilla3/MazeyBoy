@@ -8,6 +8,7 @@ import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import mazebot.behaviors.Behavior;
 import mazebot.robot.mapmaker.MapMaker;
+import mazebot.robot.mapmaker.mapmakersupport.Direction;
 import mazebot.robot.sensors.ColorSensor;
 import java.io.File;
 
@@ -30,13 +31,19 @@ public class Robot {
 	private Behavior currentBehavior;
 	public MapMaker mapMaker;
 
-	// private static File searchingSound = new File("zSearching.wav");
+	private static File mappingSound = new File("Mapping.wav");
+	private static File turningSound = new File("Turning.wav");
+	private static File completedSound = new File("Completed.wav");
+	private static File backtrackingSound = new File("Backtraking.wav");
+	private static File resolvingSound = new File("Resolving.wav");
+	private static File travelingSound = new File("Traveling.wav");
+	
 	public static enum Sounds {
 		UP, DOWN;
 	}
 
 	public static enum Wav {
-		SEARCHING, CENTERING, APPROACHING, ENGAGING;
+		 MAPPING, TURNING, COMPLETED, BACKTRACKING, RESOLVING, TRAVELING;
 	}
 
 	public static enum Orientation {
@@ -163,7 +170,7 @@ public class Robot {
 	}
 
 	public static void say(String message) {
-		System.out.println(message);
+		LCD.drawString(message, 1, 1);
 	}
 
 	public void beep(Sounds sound) {
@@ -195,10 +202,12 @@ public class Robot {
 
 	public static void playSound(Wav wav) {
 		switch (wav) {
-//			case SEARCHING: Sound.playSample(searchingSound, Sound.VOL_MAX); break; 
-//	        case CENTERING: Sound.playSample(centeringSound, Sound.VOL_MAX); break; 
-//			case APPROACHING: Sound.playSample(approachingSound, Sound.VOL_MAX); break; 
-//	        case ENGAGING: Sound.playSample(engagingSound, Sound.VOL_MAX); break; 
+//			case MAPPING: Sound.playSample(mappingSound, Sound.VOL_MAX); break; 
+//	        case TURNING: Sound.playSample(turningSound, Sound.VOL_MAX); break; 
+//			case COMPLETED: Sound.playSample(completedSound, Sound.VOL_MAX); break; 
+//	        case RESOLVING: Sound.playSample(resolvingSound, Sound.VOL_MAX); break; 
+//	        case TRAVELING: Sound.playSample(travelingSound, Sound.VOL_MAX); break; 
+//	        case BACKTRACKING: Sound.playSample(backtrackingSound, Sound.VOL_MAX); break; 
 		default:
 			Sound.beep();
 			break;
@@ -208,6 +217,22 @@ public class Robot {
 	public static void clearDisplay(int lines) {
 		for (int i = 0; i < lines; i++) {
 			System.out.println("");
+		}
+	}
+	
+	public static Orientation opposite(Orientation o) {
+		switch(o) {
+		 case NORTH:
+	            return Orientation.SOUTH;
+	        case SOUTH:
+	            return Orientation.NORTH;
+	        case EAST:
+	            return Orientation.WEST;
+	        case WEST:
+	            return Orientation.EAST;
+	        //return a North if the parameter is wrong
+	        default:
+	        	return Orientation.NORTH;
 		}
 	}
 }
